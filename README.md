@@ -4,8 +4,6 @@ This is the repo for our Advanced SQL semester project. We are building the back
 database for a fictitious restaurant in Ireland. Everything is done in SQL Server, there
 is no front end.
 
-Group members: MyNameIsMyName110099, ShortLeggedFlamingo, NicholasFearing
-
 ## Read this first: what is actually stored here
 
 We are NOT storing the database in here. You cannot upload a SQL Server database to
