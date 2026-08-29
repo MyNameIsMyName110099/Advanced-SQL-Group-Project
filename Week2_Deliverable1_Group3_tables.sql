@@ -1,6 +1,8 @@
 -- Do not run this code until the code from groups one and two have been run.
 -- The block comments above each section of code are the AI prompts.
 
+USE Restaurants;
+
 /*
 	create table in t-sql called KitchenDetails. pk is a fk from a table 
 	'Demographic' on int 'LocationID', int 'NumStoves', int 'AreaSqft', int 'MinCooks', 
