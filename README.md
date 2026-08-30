@@ -19,9 +19,9 @@ That matters because of this line in the project instructions:
 > Restaurant database. If an object is missing from your SQL Server Instance, you will
 > NOT receive credit for that piece.
 
-So all three of us need every table, function, and stored procedure on our own VM. One
-person writes a script, puts it here, and the other two download it and run it on their
-own VM. That is the whole point of this repo. It keeps our three separate databases
+So all four of us need every table, function, and stored procedure on our own VM. One
+person writes a script, puts it here, and the other three download it and run it on their
+own VM. That is the whole point of this repo. It keeps our four separate databases
 matching.
 
 The other reason: the VM instructions say **"SAVE OFTEN, NO backups of these VM's are
@@ -42,7 +42,7 @@ the `main` branch.
 
 Nothing you do in a pull request affects anybody until it is merged. You cannot break the
 project by opening one. If your script is wrong, we catch it there instead of after three
-people have already run it on their VMs.
+other people have already run it on their VMs.
 
 You do not need to install Git and you do not need to type any commands. All of this is
 buttons on github.com, and the VM has internet, so you can do it from inside the VM.
@@ -89,9 +89,9 @@ That is it. Your script is now waiting for review.
 
 Actually run the script on your VM before you approve it. Reading SQL is not the same as
 knowing it works, and the whole reason we are doing this is so a broken script does not
-end up on all three of our instances.
+end up on all four of our instances.
 
-GitHub will not let you approve your own pull request, which is fine since there are three
+GitHub will not let you approve your own pull request, which is fine since there are four
 of us. Get one other person to approve before merging.
 
 ## How to fix a script after someone requests changes
@@ -164,19 +164,25 @@ That is why the files are numbered.
   assignments, so no passwords in any file.
 - Visual Studio junk folders: `bin`, `obj`, `.vs`.
 
-## Planned folder layout
+## Folder layout
+
+One folder per week. Each holds the group's combined scripts for that week, plus an
+`Individual` folder with each person's own work exactly as they wrote it.
 
 ```
-Week2-Database/        create database, create tables, relationships, seed data
-Week3-Functions/       the five functions
-Week4-Procs-Indexes/   stored procedures, indexes, CRUD procedures
-Week5-SSIS/            FinalProjectSSISFileLoad, FinalProjectTableExport
-Week6-SSRS/            SSRS Reports
-Week7-Security/        roles, users, object permissions
-Week8-Backup/          backup, transaction log, shrink
-docs/                  database diagram, index reasoning, other write ups
-screenshots/           the test screenshots the project asks for
+Week2/                 database and tables, seed data, AI prompts
+  Individual/          each person's own table script
+Week3/                 the five functions
+Week4/                 stored procedures and indexes
+Week5/                 FinalProjectSSISFileLoad, FinalProjectTableExport
+Week6/                 SSRS reports
+Week7/                 roles, users, object permissions
+Week8/                 backup, transaction log, shrink
 ```
+
+The combined script is what actually gets run on a VM. The `Individual` copies are the
+record of who wrote what, so they are left alone even after the combined version has
+moved on.
 
 ## Order to run everything on a fresh VM
 
