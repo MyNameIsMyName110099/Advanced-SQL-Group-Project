@@ -1,4 +1,3 @@
-
 USE Restaurant;
 GO
 
@@ -165,25 +164,25 @@ GO
 /*	15 rows. about three charities per branch. a restaurant builds a real
 	relationship with a few local food banks and shelters, it does not
 	donate to a hundred different organisations.
-	every LastDonationDate is a different day and every name is distinct
-	so the UNIQUE constraint on CharityName holds.
+	every charity name is distinct so the UNIQUE constraint on
+	CharityName holds.
 */
 INSERT INTO Charities
-	(CharityName, CharityType, ContactName, PhoneNumber, City, DonatingLocationID, LastDonationDate, TotalDonatedValue, IsActive)
+	(CharityName, CharityType, ContactName, PhoneNumber, City, DonatingLocationID, TotalDonatedValue, IsActive)
 VALUES
-	('Simon Dublin Food Bank', 'Food Bank', 'Aoife Walsh', '080 000 0000', 'Dublin', 1, '2025-01-02', 120.00, 1),
-	('Focus Dublin Food Bank', 'Food Bank', 'Saoirse Duffy', '082 026 0074', 'Dublin', 2, '2025-01-25', 207.25, 1),
-	('Peter McVerry Dublin Food Bank', 'Food Bank', 'Orla Tierney', '084 052 0148', 'Dublin', 3, '2025-02-17', 294.50, 1),
-	('Capuchin Dublin Food Bank', 'Food Bank', 'Grainne McLoughlin', '086 078 0222', 'Dublin', 4, '2025-03-12', 381.75, 1),
-	('Vincent de Paul Dublin Food Bank', 'Food Bank', 'Aisling Egan', '088 104 0296', 'Dublin', 5, '2025-04-04', 469.00, 1),
-	('Crosscare Dublin Food Bank', 'Food Bank', 'Caoimhe Lynch', '080 130 0370', 'Dublin', 1, '2025-04-27', 556.25, 1),
-	('Novas Dublin Food Bank', 'Food Bank', 'Nuala Power', '082 156 0444', 'Dublin', 2, '2025-05-20', 643.50, 1),
-	('Depaul Dublin Food Bank', 'Food Bank', 'Muireann McCarthy', '084 182 0518', 'Dublin', 3, '2025-06-12', 730.75, 1),
-	('Sophia Dublin Food Bank', 'Food Bank', 'Oisin Casey', '086 208 0592', 'Dublin', 4, '2025-07-05', 818.00, 1),
-	('Threshold Dublin Food Bank', 'Food Bank', 'Declan O''Connor', '088 234 0666', 'Dublin', 5, '2025-07-28', 905.25, 1),
-	('Simon Cork Homeless Shelter', 'Homeless Shelter', 'Fergal Sheehan', '080 260 0740', 'Cork', 1, '2025-08-20', 992.50, 1),
-	('Focus Cork Homeless Shelter', 'Homeless Shelter', 'Sean Smith', '082 286 0814', 'Cork', 2, '2025-09-12', 1079.75, 1),
-	('Peter McVerry Cork Homeless Shelter', 'Homeless Shelter', 'Diarmuid Brennan', '084 312 0888', 'Cork', 3, '2025-10-05', 1167.00, 1),
-	('Capuchin Cork Homeless Shelter', 'Homeless Shelter', 'Tadhg Murphy', '086 338 0962', 'Cork', 4, '2025-10-28', 1254.25, 1),
-	('Vincent de Paul Cork Homeless Shelter', 'Homeless Shelter', 'Barry Connolly', '088 364 1036', 'Cork', 5, '2025-11-20', 1341.50, 1);
+	('Simon Dublin Food Bank', 'Food Bank', 'Aoife Walsh', '080 000 0000', 'Dublin', 1, 120.00, 1),
+	('Focus Dublin Food Bank', 'Food Bank', 'Saoirse Duffy', '082 026 0074', 'Dublin', 2, 207.25, 1),
+	('Peter McVerry Dublin Food Bank', 'Food Bank', 'Orla Tierney', '084 052 0148', 'Dublin', 3, 294.50, 1),
+	('Capuchin Dublin Food Bank', 'Food Bank', 'Grainne McLoughlin', '086 078 0222', 'Dublin', 4, 381.75, 1),
+	('Vincent de Paul Dublin Food Bank', 'Food Bank', 'Aisling Egan', '088 104 0296', 'Dublin', 5, 469.00, 1),
+	('Crosscare Dublin Food Bank', 'Food Bank', 'Caoimhe Lynch', '080 130 0370', 'Dublin', 1, 556.25, 1),
+	('Novas Dublin Food Bank', 'Food Bank', 'Nuala Power', '082 156 0444', 'Dublin', 2, 643.50, 1),
+	('Depaul Dublin Food Bank', 'Food Bank', 'Muireann McCarthy', '084 182 0518', 'Dublin', 3, 730.75, 1),
+	('Sophia Dublin Food Bank', 'Food Bank', 'Oisin Casey', '086 208 0592', 'Dublin', 4, 818.00, 1),
+	('Threshold Dublin Food Bank', 'Food Bank', 'Declan O''Connor', '088 234 0666', 'Dublin', 5, 905.25, 1),
+	('Simon Cork Homeless Shelter', 'Homeless Shelter', 'Fergal Sheehan', '080 260 0740', 'Cork', 1, 992.50, 1),
+	('Focus Cork Homeless Shelter', 'Homeless Shelter', 'Sean Smith', '082 286 0814', 'Cork', 2, 1079.75, 1),
+	('Peter McVerry Cork Homeless Shelter', 'Homeless Shelter', 'Diarmuid Brennan', '084 312 0888', 'Cork', 3, 1167.00, 1),
+	('Capuchin Cork Homeless Shelter', 'Homeless Shelter', 'Tadhg Murphy', '086 338 0962', 'Cork', 4, 1254.25, 1),
+	('Vincent de Paul Cork Homeless Shelter', 'Homeless Shelter', 'Barry Connolly', '088 364 1036', 'Cork', 5, 1341.50, 1);
 GO
