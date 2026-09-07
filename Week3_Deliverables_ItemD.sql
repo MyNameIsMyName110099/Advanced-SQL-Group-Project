@@ -7,9 +7,17 @@ GO
 	each with an overall sum for all options
 */
 
-SELECT ISNULL(OrderChannel, 'All Methods') AS 'Order Method',
-	COUNT(OrderChannel) AS 'Order Method Count'
-FROM Transactions
-GROUP BY ROLLUP(OrderChannel)
-ORDER BY OrderChannel DESC
-;
+CREATE FUNCTION fnOrderMethodSum()
+RETURNS TABLE
+AS
+RETURN
+(
+	SELECT ISNULL(OrderChannel, 'All Methods') AS 'Order Method',
+		COUNT(OrderChannel) AS 'Order Method Count'
+	FROM Transactions
+	GROUP BY ROLLUP(OrderChannel)
+);
+
+/* SELECT *
+FROM fnOrderMethodSum();
+*/
