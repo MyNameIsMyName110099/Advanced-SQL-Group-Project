@@ -28,7 +28,9 @@ RETURNS TABLE
 AS
 RETURN
 (
-	SELECT ISNULL(CASE WHEN r.TableID = c.PreferredTable THEN 'Yes' ELSE 'No' END,
+	-- COALESCE rather than ISNULL: ISNULL takes the type of its first argument,
+	-- which is the 3 character Yes/No, and would cut the label down to 'All'.
+	SELECT COALESCE(CASE WHEN r.TableID = c.PreferredTable THEN 'Yes' ELSE 'No' END,
 			'All Reservations') AS 'Got Favorite Table',
 		COUNT(*) AS 'Reservations'
 	FROM Reservations r
