@@ -1,37 +1,3 @@
--- ============================================================================
--- Advanced SQL Semester Project
--- Week 4 Deliverables, Item 1 - Stored Procedures
---
--- Mason Romdenne, Nathan Krouth, Nicholas Fearing
--- Prepared by Mason Romdenne
--- Database: Restaurant
---
--- Item 1 asks for five stored procedures, a through e.
---
---   Procedure 1a  spN_ChefDetails       Mason
---   Procedure 1b  spN_RecipeDetails     Nathan
---   Procedure 1c  spN_DishDetails       Nathan
---   Procedure 1d  spN_KitchenDetails    Nicholas
---   Procedure 1e  spN_CustomerDetails   Nathan
---
--- Requirement c is named spN_RecipeDetails in the project document, the same
--- name as requirement b, so it is spN_DishDetails here.
---
--- Item 1a needs a link between a supplier and the items it sells, which the
--- Week 2 schema did not have, so a SupplierIngredients table is created and
--- filled at the top of this file before the procedure.
---
--- Money columns use FORMAT(value, 'C', 'en-IE') so SQL Server supplies the
--- euro sign for the Irish locale rather than it being hardcoded.
---
--- Each object is written by the group member named above it and was reviewed
--- and merged through a pull request on the group's GitHub repo.
---
--- Run the whole file at once. Every object is dropped first if it already
--- exists, so it can be run again without editing. The TESTING section at the
--- bottom is the testing code for this submission.
--- ============================================================================
-
 USE Restaurant;
 GO
 
@@ -133,19 +99,16 @@ GO
 -- all of the ingredients. ROLLUP adds a subtotal row per dish (IngredientName
 -- is NULL) and a grand total row at the top (both columns NULL).
 -- ============================================================================
-CREATE PROCEDURE spN_RecipeDetails
-AS
-BEGIN
-	SET NOCOUNT ON;
+CREATE PROC spN_RecipeDetails
 
-	SELECT DishID, IngredientName,
-		FORMAT(SUM(IngredientCost * QuantityUsed), 'C', 'en-IE') AS RecipeCost
-	FROM Recipes r
-		JOIN Ingredients i
-			ON r.IngredientID = i.IngredientID
-	GROUP BY ROLLUP(DishID, IngredientName)
-	ORDER BY DishID;
-END;
+AS
+
+SELECT DishID, IngredientName, FORMAT(SUM(IngredientCost * QuantityUsed), 'C', 'en-IE') AS RecipeCost
+FROM Recipes r
+	JOIN Ingredients i
+		ON r.IngredientID = i.IngredientID
+GROUP BY ROLLUP(DishID, IngredientName)
+ORDER BY DishID
 GO
 
 
@@ -160,20 +123,17 @@ GO
 -- Returns a dish's details, each ingredient in it, and the menu price of the
 -- dish itself.
 -- ============================================================================
-CREATE PROCEDURE spN_DishDetails
-AS
-BEGIN
-	SET NOCOUNT ON;
+CREATE PROC spN_DishDetails
 
-	SELECT r.DishID, d.DishName, r.IngredientID, IngredientName,
-		FORMAT(Price, 'C', 'en-IE') AS DishCost
-	FROM Dishes d
-		JOIN Recipes r
-			ON d.DishID = r.DishID
-		JOIN Ingredients i
-			ON i.IngredientID = r.IngredientID
-	ORDER BY r.DishID, r.IngredientID;
-END;
+AS
+
+SELECT r.DishID, d.DishName, r.IngredientID, IngredientName, FORMAT(Price, 'C', 'en-IE') AS DishCost
+FROM Dishes d
+	JOIN Recipes r
+		ON d.DishID = r.DishID
+	JOIN Ingredients i
+		ON i.IngredientID = r.IngredientID
+GROUP BY r.DishID, d.DishName, r.IngredientID, IngredientName, Price
 GO
 
 
@@ -188,17 +148,17 @@ GO
 -- returns all rows, otherwise only the row with the matching LeadChef.
 -- ============================================================================
 CREATE PROCEDURE spN_KitchenDetails
-	@LeadChef INT = NULL
+	@LeadChef int = NULL
 AS
 BEGIN
 	BEGIN TRY
 		SELECT *
 		FROM KitchenDetails
-		WHERE @LeadChef IS NULL OR @LeadChef = LeadChef;
+		WHERE @LeadChef IS NULL OR @LeadChef = LeadChef
 	END TRY
 	BEGIN CATCH
 		PRINT 'An error occured while searching for Chef #' +
-			CONVERT(varchar, @LeadChef, 1) + '.';
+			CONVERT(varchar, @LeadChef, 1) + '.'
 	END CATCH
 END;
 GO
@@ -212,22 +172,19 @@ GO
 --  stored procedure should be able to run and return individual customer
 --  information."
 --
--- Returns the details of all customers with a formatted name. The optional
--- @CustomerID parameter returns one customer's information.
+-- Returns the details of all customers, with a formatted name to make it a
+-- bit more neat. The optional @CustomerID parameter returns one customer.
 -- ============================================================================
-CREATE PROCEDURE spN_CustomerDetails
+CREATE PROC spN_CustomerDetails
 	@CustomerID INT = NULL
 AS
-BEGIN
-	SET NOCOUNT ON;
 
-	SELECT CustomerID, FirstName + ' ' + LastName AS CustName, Email, PhoneNumber,
-		PreferredTable, PreferredServer, PreferredRes, PreferredOrder,
-		Birthday
-	FROM Customers
-	WHERE @CustomerID IS NULL OR CustomerID = @CustomerID
-	ORDER BY CustName ASC;
-END;
+SELECT FirstName + ' ' + LastName AS CustName, Email, PhoneNumber,
+	PreferredTable, PreferredServer, PreferredRes, PreferredOrder,
+	Birthday
+FROM Customers
+WHERE @CustomerID IS NULL OR CustomerID = @CustomerID
+ORDER BY CustName ASC
 GO
 
 

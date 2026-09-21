@@ -1,31 +1,3 @@
--- ============================================================================
--- Advanced SQL Semester Project
--- Week 4 Deliverables, Item 2 - Indexes
---
--- Mason Romdenne, Nathan Krouth, Nicholas Fearing
--- Prepared by Mason Romdenne
--- Database: Restaurant
---
--- Item 2 asks for an index on each of five Week 2 tables (items d, e, i, l
--- and p of the Week 2 table list) with the reason for the field chosen.
---
---   d  Charities       IX_Charities_DonatingLocationID       Mason
---   e  Dishes          IX_Dishname_Price                     Nicholas
---   i  Recipes         IX_Recipes_DishID                     Nathan
---   l  Transactions    IX_Transactions_OrderDateTime         Mason
---      (and TransactionDetails, IX_TransactionDetails_TransactionID)
---   p  Reservations    IX_CustomerID                         Nicholas
---
--- The reasoning for each field is in the comment block above its index.
---
--- Each index is written by the group member named above it and was reviewed
--- and merged through a pull request on the group's GitHub repo.
---
--- Run the whole file at once. Every index is dropped first if it already
--- exists, so it can be run again without editing. The TESTING section at the
--- bottom is the testing code for this submission.
--- ============================================================================
-
 USE Restaurant;
 GO
 
@@ -70,12 +42,10 @@ GO
 -- Index e - Dishes
 -- Nicholas Fearing
 --
--- DishName and Price make a covering index for fnMenuPrices() from Week 3,
--- which reads exactly those two columns, so the menu can be listed from the
--- index alone.
+-- I chose Dishname and Price to make a covering index for fnMenuPrices().
 -- ============================================================================
-CREATE NONCLUSTERED INDEX IX_Dishname_Price
-	ON Dishes (DishName, Price);
+CREATE INDEX IX_Dishname_Price
+ON Dishes (Dishname, Price);
 GO
 
 
@@ -83,9 +53,11 @@ GO
 -- Index i - Recipes
 -- Nathan Krouth
 --
--- DishID is mandatory when looking into this table to find all ingredients
--- belonging to a specific dish. IngredientID and QuantityUsed are included
--- so the index works as a recipe book as well.
+-- Key already takes up clustered index so this one is unclustered. I decided
+-- to use the DishID for this index since it is mandatory when looking into
+-- this table to find all ingredients belonging to a specific dish. I am
+-- including the IngredientID and Quantity so this may work as a recipe book
+-- as well.
 -- ============================================================================
 CREATE NONCLUSTERED INDEX IX_Recipes_DishID
 	ON Recipes (DishID)
@@ -125,11 +97,11 @@ GO
 -- Index p - Reservations
 -- Nicholas Fearing
 --
--- CustomerID because it is both a foreign key and it is the column
--- fnReservationFavoriteTable() from Week 3 joins on.
+-- I chose CustomerID because it is both a FK and it is used in a join by
+-- fnReservationFavoriteTable().
 -- ============================================================================
-CREATE NONCLUSTERED INDEX IX_CustomerID
-	ON Reservations (CustomerID);
+CREATE INDEX IX_CustomerID
+ON Reservations (CustomerID);
 GO
 
 
