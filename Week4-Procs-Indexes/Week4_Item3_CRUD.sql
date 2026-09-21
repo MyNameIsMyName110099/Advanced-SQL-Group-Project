@@ -1,31 +1,3 @@
--- ============================================================================
--- Advanced SQL Semester Project
--- Week 4 Deliverables, Item 3 - CRUD Stored Procedures
---
--- Mason Romdenne, Nathan Krouth, Nicholas Fearing
--- Prepared by Mason Romdenne
--- Database: Restaurant
---
--- Item 3 asks for CRUD stored procedures on two tables, one procedure per
--- action, named spN_<Action><Table>. The two tables are Charities and
--- KitchenDetails. The group split the work by action:
---
---   SELECT   spN_GetCharities        spN_GetKitchenDetails       Mason
---   INSERT   spN_InsertCharities     spN_InsertKitchenDetails    Mason
---   UPDATE   spN_UpdateCharities     spN_UpdateKitchenDetails    Nicholas
---   DELETE   spN_DeleteCharities     spN_DeleteKitchenDetails    Nathan
---
--- Money columns use FORMAT(value, 'C', 'en-IE') so SQL Server supplies the
--- euro sign for the Irish locale rather than it being hardcoded.
---
--- Each object is written by the group member named above it and was reviewed
--- and merged through a pull request on the group's GitHub repo.
---
--- Run the whole file at once. Every object is dropped first if it already
--- exists, so it can be run again without editing. The TESTING section at the
--- bottom is the testing code for this submission.
--- ============================================================================
-
 USE Restaurant;
 GO
 
@@ -50,10 +22,10 @@ GO
 -- The two tables are Charities and KitchenDetails, chosen because nothing
 -- else has a foreign key pointing at them, so the DELETE procedures can run
 -- without breaking a relationship. The project says each procedure "should
--- not generate any exceptions and all should return data", so every
--- procedure checks for anything that would trip a constraint first and
--- returns a Rejected message instead of letting SQL Server throw, and every
--- procedure returns a result set.
+-- not generate any exceptions and all should return data", so the INSERT
+-- procedures check for anything that would trip a constraint and return a
+-- Rejected message instead of letting SQL Server throw, and every procedure
+-- returns a result set.
 --
 --   SELECT   spN_GetCharities        spN_GetKitchenDetails       Mason
 --   INSERT   spN_InsertCharities     spN_InsertKitchenDetails    Mason
@@ -252,40 +224,68 @@ GO
 
 
 -- ============================================================================
+-- UPDATE - spN_UpdateKitchenDetails
+-- Nicholas Fearing
+--
+-- UPDATE stored proc on KitchenDetails table for inputting inspection data.
+-- Proc takes four parameters:
+--   KitchenID int (to identify row to be updated),
+--   Comments nvarchar(500),
+--   InspectionPassed bit,
+--   LastInspectionDate datetime (defaults to day and time of update if not given)
+-- Returns the updated row.
+-- ============================================================================
+CREATE PROC spN_UpdateKitchenDetails
+	@KitchenID int,
+	@Comments nvarchar(500),
+	@InspectionPassed bit,
+	@InspectionDate datetime = NULL
+AS
+BEGIN TRY
+	IF @InspectionDate IS NULL
+		SELECT @InspectionDate = SYSDATETIME();
+
+	BEGIN TRAN;
+		UPDATE KitchenDetails
+		SET InspectionComments = @Comments,
+			InspectionPassed = @InspectionPassed,
+			LastInspectionDate = @InspectionDate
+		WHERE KitchenID = @KitchenID
+	COMMIT TRAN;
+
+	SELECT * FROM KitchenDetails WHERE KitchenID = @KitchenID;
+END TRY
+BEGIN CATCH
+	ROLLBACK TRAN;
+END CATCH;
+GO
+
+
+-- ============================================================================
 -- UPDATE - spN_UpdateCharities
 -- Nicholas Fearing
 --
--- Updates a charity's info. Takes six parameters: CharityID (to identify the
--- row), IsActive, ContactName, PhoneNumber, CharityName and CharityType. The
--- last four are optional and default to the row's existing value, ordered
--- from most likely to change to least. Checks the charity exists and that a
--- new name is not already taken, then returns the updated row.
+-- UPDATE stored proc on Charities table for updating charity info.
+-- Proc takes six parameters:
+--   CharityID int (to identify row to be updated),
+--   IsActive bit,
+--   ContactName nvarchar(100),
+--   PhoneNumber nvarchar(20),
+--   CharityName nvarchar(100),
+--   CharityType nvarchar(50)
+-- The last four parameters default to existing value and are optional.
+-- They are ordered from most likely to change to least. Returns the
+-- updated row.
 -- ============================================================================
-CREATE PROCEDURE spN_UpdateCharities
-	@CharityID INT,
-	@IsActive BIT,
-	@ContactName NVARCHAR(100) = NULL,
-	@PhoneNumber NVARCHAR(20) = NULL,
-	@CharityName NVARCHAR(100) = NULL,
-	@CharityType NVARCHAR(50) = NULL
+CREATE PROC spN_UpdateCharities
+	@CharityID int,
+	@IsActive bit,
+	@ContactName nvarchar(100) = NULL,
+	@PhoneNumber nvarchar(20) = NULL,
+	@CharityName nvarchar(100) = NULL,
+	@CharityType nvarchar(50) = NULL
 AS
-BEGIN
-	SET NOCOUNT ON;
-
-	IF NOT EXISTS (SELECT 1 FROM Charities WHERE CharityID = @CharityID)
-	BEGIN
-		SELECT CONCAT('Rejected - no charity with ID ', ISNULL(@CharityID, 0), '.') AS 'Result';
-		RETURN 1;
-	END;
-
-	IF @CharityName IS NOT NULL
-		AND EXISTS (SELECT 1 FROM Charities WHERE CharityName = @CharityName AND CharityID <> @CharityID)
-	BEGIN
-		SELECT CONCAT('Rejected - ', @CharityName, ' already exists.') AS 'Result';
-		RETURN 1;
-	END;
-
-	-- any parameter left off keeps the value already on the row
+BEGIN TRY
 	IF @ContactName IS NULL
 		SELECT @ContactName = ContactName FROM Charities WHERE CharityID = @CharityID;
 
@@ -298,76 +298,21 @@ BEGIN
 	IF @CharityType IS NULL
 		SELECT @CharityType = CharityType FROM Charities WHERE CharityID = @CharityID;
 
-	BEGIN TRY
-		BEGIN TRAN;
-			UPDATE Charities
-			SET IsActive = @IsActive,
-				ContactName = @ContactName,
-				PhoneNumber = @PhoneNumber,
-				CharityName = @CharityName,
-				CharityType = @CharityType
-			WHERE CharityID = @CharityID;
-		COMMIT TRAN;
-	END TRY
-	BEGIN CATCH
-		IF @@TRANCOUNT > 0 ROLLBACK TRAN;
-		SELECT CONCAT('Rejected - ', ERROR_MESSAGE()) AS 'Result';
-		RETURN 1;
-	END CATCH;
+	BEGIN TRAN;
+		UPDATE Charities
+		SET IsActive = @IsActive,
+			ContactName = @ContactName,
+			PhoneNumber = @PhoneNumber,
+			CharityName = @CharityName,
+			CharityType = @CharityType
+		WHERE CharityID = @CharityID;
+	COMMIT TRAN;
 
-	-- return the updated row
 	SELECT * FROM Charities WHERE CharityID = @CharityID;
-	RETURN 0;
-END;
-GO
-
-
--- ============================================================================
--- UPDATE - spN_UpdateKitchenDetails
--- Nicholas Fearing
---
--- Records an inspection on a kitchen. Takes four parameters: KitchenID (to
--- identify the row), Comments, InspectionPassed and InspectionDate, which
--- defaults to the day and time of the update if not given. Checks the
--- kitchen exists, then returns the updated row.
--- ============================================================================
-CREATE PROCEDURE spN_UpdateKitchenDetails
-	@KitchenID INT,
-	@Comments NVARCHAR(500),
-	@InspectionPassed BIT,
-	@InspectionDate DATETIME = NULL
-AS
-BEGIN
-	SET NOCOUNT ON;
-
-	IF NOT EXISTS (SELECT 1 FROM KitchenDetails WHERE KitchenID = @KitchenID)
-	BEGIN
-		SELECT CONCAT('Rejected - no kitchen with ID ', ISNULL(@KitchenID, 0), '.') AS 'Result';
-		RETURN 1;
-	END;
-
-	IF @InspectionDate IS NULL
-		SELECT @InspectionDate = SYSDATETIME();
-
-	BEGIN TRY
-		BEGIN TRAN;
-			UPDATE KitchenDetails
-			SET InspectionComments = @Comments,
-				InspectionPassed = @InspectionPassed,
-				LastInspectionDate = @InspectionDate
-			WHERE KitchenID = @KitchenID;
-		COMMIT TRAN;
-	END TRY
-	BEGIN CATCH
-		IF @@TRANCOUNT > 0 ROLLBACK TRAN;
-		SELECT CONCAT('Rejected - ', ERROR_MESSAGE()) AS 'Result';
-		RETURN 1;
-	END CATCH;
-
-	-- return the updated row
-	SELECT * FROM KitchenDetails WHERE KitchenID = @KitchenID;
-	RETURN 0;
-END;
+END TRY
+BEGIN CATCH
+	ROLLBACK TRAN;
+END CATCH;
 GO
 
 
@@ -375,33 +320,20 @@ GO
 -- DELETE - spN_DeleteCharities
 -- Nathan Krouth
 --
--- Deletes a charity by CharityID. Simple since no other table has a foreign
--- key to Charities, so there are no dependencies to clear first. Checks the
--- charity exists, then returns what was deleted.
+-- Procedure to delete items from the Charities table.
+-- Thankfully simple since there are no dependencies here.
+-- Returns how many rows were deleted.
 -- ============================================================================
-CREATE PROCEDURE spN_DeleteCharities
+CREATE PROC spN_DeleteCharities
+
 	@CharityID INT
+
 AS
-BEGIN
-	SET NOCOUNT ON;
 
-	IF NOT EXISTS (SELECT 1 FROM Charities WHERE CharityID = @CharityID)
-	BEGIN
-		SELECT CONCAT('Rejected - no charity with ID ', ISNULL(@CharityID, 0), '.') AS 'Result';
-		RETURN 1;
-	END;
+DELETE FROM Charities
+WHERE CharityID = @CharityID;
 
-	DECLARE @Name NVARCHAR(100) = (SELECT CharityName FROM Charities WHERE CharityID = @CharityID);
-
-	DELETE FROM Charities
-	WHERE CharityID = @CharityID;
-
-	DECLARE @Rows INT = @@ROWCOUNT;
-
-	SELECT CONCAT('Deleted charity ', @CharityID, ' - ', @Name, '.') AS 'Result',
-		@Rows AS 'Rows Deleted';
-	RETURN 0;
-END;
+SELECT @@ROWCOUNT AS RowsDeleted;
 GO
 
 
@@ -409,38 +341,22 @@ GO
 -- DELETE - spN_DeleteKitchenDetails
 -- Nathan Krouth
 --
--- Deletes a kitchen by KitchenID. Chefs are linked to a branch through
--- Demographic, not through KitchenDetails, and nothing references
--- KitchenDetails, so the row can be removed without touching any other
--- table. Checks the kitchen exists, then returns what was deleted.
+-- Procedure to delete items from the KitchenDetails table.
+-- Nothing has a foreign key to KitchenDetails (chefs are tied to a branch
+-- through Demographic, not through the kitchen), so the row can be removed
+-- without touching any other table. Returns how many rows were deleted.
 -- ============================================================================
-CREATE PROCEDURE spN_DeleteKitchenDetails
-	@KitchenID INT
+CREATE PROC spN_DeleteKitchenDetails
+
+	@KitchenID INT,
+	@LocationID INT
+
 AS
-BEGIN
-	SET NOCOUNT ON;
 
-	IF NOT EXISTS (SELECT 1 FROM KitchenDetails WHERE KitchenID = @KitchenID)
-	BEGIN
-		SELECT CONCAT('Rejected - no kitchen with ID ', ISNULL(@KitchenID, 0), '.') AS 'Result';
-		RETURN 1;
-	END;
+DELETE FROM KitchenDetails
+WHERE LocationID = @LocationID AND KitchenID = @KitchenID;
 
-	DECLARE @Branch NVARCHAR(100) = (
-		SELECT d.LocationName
-		FROM KitchenDetails k
-			INNER JOIN Demographic d ON k.LocationID = d.LocationID
-		WHERE k.KitchenID = @KitchenID);
-
-	DELETE FROM KitchenDetails
-	WHERE KitchenID = @KitchenID;
-
-	DECLARE @Rows INT = @@ROWCOUNT;
-
-	SELECT CONCAT('Deleted kitchen ', @KitchenID, ' at ', @Branch, '.') AS 'Result',
-		@Rows AS 'Rows Deleted';
-	RETURN 0;
-END;
+SELECT @@ROWCOUNT AS RowsDeleted;
 GO
 
 
@@ -450,9 +366,14 @@ GO
 -- Calls every procedure above. Run the file as a whole, or highlight one
 -- statement at a time for the screenshots. The tests insert a test charity
 -- and a test kitchen, update them, then delete them, so the tables end up
--- exactly as they started (15 charities, 5 kitchens). Each action also
--- gets a bad call to show the Rejected message instead of an exception.
+-- exactly as they started (15 charities, 5 kitchens). The INSERT procedures
+-- also get bad calls to show the Rejected message instead of an exception.
 -- ============================================================================
+
+-- clear out any test rows an earlier run left behind, so the counts below
+-- start from 15 charities and 5 kitchens
+DELETE FROM Charities WHERE CharityName IN ('Week 4 Test Charity', 'Joyce Dublin Clinic');
+DELETE FROM KitchenDetails WHERE InspectionComments IN ('Week 4 test row', 'Insufficient fire suppression system.');
 
 -- SELECT - all rows then one row
 EXEC spN_GetCharities;
@@ -475,25 +396,24 @@ EXEC spN_InsertKitchenDetails @LocationID = 1, @NumStoves = 5, @AreaSqft = 80,
 EXEC spN_InsertKitchenDetails @LocationID = 1, @NumStoves = 0, @AreaSqft = 80,
 	@MinCooks = 4, @LeadChef = 501, @FreezerCubicFeet = 100;
 
--- UPDATE - the test rows, then a bad ID
-DECLARE @TestCharity INT = (SELECT CharityID FROM Charities WHERE CharityName = 'Week 4 Test Charity');
-DECLARE @TestKitchen INT = (SELECT KitchenID FROM KitchenDetails WHERE InspectionComments = 'Week 4 test row');
+-- UPDATE - the test rows
+-- the lookups match the row before and after the UPDATE renames it, so each
+-- statement below can be highlighted and run on its own
+DECLARE @TestCharity INT = (SELECT MAX(CharityID) FROM Charities
+	WHERE CharityName IN ('Week 4 Test Charity', 'Joyce Dublin Clinic'));
+DECLARE @TestKitchen INT = (SELECT MAX(KitchenID) FROM KitchenDetails
+	WHERE InspectionComments IN ('Week 4 test row', 'Insufficient fire suppression system.'));
 
 EXEC spN_UpdateCharities @CharityID = @TestCharity, @IsActive = 1,
 	@ContactName = 'James Joyce', @PhoneNumber = '353 1 878 8547',
 	@CharityName = 'Joyce Dublin Clinic', @CharityType = 'Free Clinic';
-EXEC spN_UpdateCharities @CharityID = 9999, @IsActive = 0;
 
 EXEC spN_UpdateKitchenDetails @KitchenID = @TestKitchen,
 	@Comments = 'Insufficient fire suppression system.', @InspectionPassed = 0;
-EXEC spN_UpdateKitchenDetails @KitchenID = 9999, @Comments = 'x', @InspectionPassed = 1;
 
--- DELETE - the test rows, then a bad ID
+-- DELETE - the test rows
 EXEC spN_DeleteCharities @CharityID = @TestCharity;
-EXEC spN_DeleteCharities @CharityID = 9999;
-
-EXEC spN_DeleteKitchenDetails @KitchenID = @TestKitchen;
-EXEC spN_DeleteKitchenDetails @KitchenID = 9999;
+EXEC spN_DeleteKitchenDetails @KitchenID = @TestKitchen, @LocationID = 1;
 
 -- back to 15 and 5
 SELECT (SELECT COUNT(*) FROM Charities) AS 'Charities',
