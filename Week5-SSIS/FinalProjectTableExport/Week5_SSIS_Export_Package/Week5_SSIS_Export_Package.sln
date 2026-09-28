@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.37411.7 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{C9674DCB-5085-4A16-B785-4C70DD1589BD}") = "Week5_SSIS_Export_Package", "Week5_SSIS_Export_Package\Week5_SSIS_Export_Package.dtproj", "{328A99B4-5DB4-0183-8FB6-B125396E6384}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Development|Default = Development|Default
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{328A99B4-5DB4-0183-8FB6-B125396E6384}.Development|Default.ActiveCfg = Development
+		{328A99B4-5DB4-0183-8FB6-B125396E6384}.Development|Default.Build.0 = Development
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {40F3818D-FCBC-49D8-B7D5-4E3CFED0D016}
+	EndGlobalSection
+EndGlobal
