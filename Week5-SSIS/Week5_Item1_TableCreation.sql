@@ -28,15 +28,23 @@ GO
 -- also be one more column Nathan has to leave unmapped in the destination.
 --
 -- (CurrencyRateDate, FromCurrencyCode) is the natural key and is unique
--- across all ten rows, but no key constraint is declared. This is a load
--- target, so a duplicate row should land and be caught in review rather than
--- fail the package mid-load.
+-- across all ten rows, but no primary key is declared. A duplicate row should
+-- land and be caught in review rather than fail the package mid-load.
+--
+-- FromCurrencyCode is a foreign key on Sales.Currency, added on Nicholas
+-- Fearing's review of PR #28. Sales.Currency.CurrencyCode is NCHAR(3) and the
+-- primary key of that table, so the types line up exactly and USD resolves.
+-- The load will now reject a row whose currency code is not a real currency,
+-- so if the package starts failing on a constraint violation, look at the
+-- code in the file before looking at the package.
 -- ============================================================================
 CREATE TABLE dbo.SSIS_File_Load (
 	AverageRate			DECIMAL(18, 9)	NOT NULL,
 	FromCurrencyCode	NCHAR(3)		NOT NULL,
 	CurrencyRateDate	DATETIME		NOT NULL,
-	EndOfDayRate		DECIMAL(18, 9)	NOT NULL
+	EndOfDayRate		DECIMAL(18, 9)	NOT NULL,
+	CONSTRAINT FK_SSIS_File_Load_Currency FOREIGN KEY (FromCurrencyCode)
+		REFERENCES Sales.Currency (CurrencyCode)
 );
 GO
 
@@ -67,6 +75,8 @@ GO
 --     Every row is the literal USD. ISO 4217 currency codes are always
 --     exactly three characters, so the column is fixed length rather than
 --     NVARCHAR, and NCHAR(3) is what Sales.CurrencyRate.FromCurrencyCode uses.
+--     It is also what Sales.Currency.CurrencyCode uses, which the foreign key
+--     above requires.
 --
 -- CurrencyRateDate DATETIME
 --     The values look like 9/3/05 0:00, so there is a time component in the
