@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.37411.7 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F14B399A-7131-4C87-9E4B-1186C45EF12D}") = "SSRS Report - Mason", "SSRS Report - Mason\SSRS Report - Mason.rptproj", "{2CF28235-A3EB-D0C6-75D9-DCED6E998967}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Default = Debug|Default
+		DebugLocal|Default = DebugLocal|Default
+		Release|Default = Release|Default
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2CF28235-A3EB-D0C6-75D9-DCED6E998967}.Debug|Default.ActiveCfg = Debug
+		{2CF28235-A3EB-D0C6-75D9-DCED6E998967}.Debug|Default.Build.0 = Debug
+		{2CF28235-A3EB-D0C6-75D9-DCED6E998967}.Debug|Default.Deploy.0 = Debug
+		{2CF28235-A3EB-D0C6-75D9-DCED6E998967}.DebugLocal|Default.ActiveCfg = DebugLocal
+		{2CF28235-A3EB-D0C6-75D9-DCED6E998967}.DebugLocal|Default.Build.0 = DebugLocal
+		{2CF28235-A3EB-D0C6-75D9-DCED6E998967}.Release|Default.ActiveCfg = Release
+		{2CF28235-A3EB-D0C6-75D9-DCED6E998967}.Release|Default.Build.0 = Release
+		{2CF28235-A3EB-D0C6-75D9-DCED6E998967}.Release|Default.Deploy.0 = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FCBCDFC7-5E95-4C4B-882E-CD13EAA5381E}
+	EndGlobalSection
+EndGlobal
