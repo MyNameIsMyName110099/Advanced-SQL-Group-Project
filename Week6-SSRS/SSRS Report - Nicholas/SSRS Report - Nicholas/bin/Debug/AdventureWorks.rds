@@ -1,8 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<RptDataSource xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="AdventureWorks">
-  <ConnectionProperties>
-    <Extension>SQL</Extension>
-    <ConnectString>Data Source=ADVSQL;Initial Catalog=AdventureWorks2022;TrustServerCertificate=True</ConnectString>
-  </ConnectionProperties>
-  <DataSourceID>a7437c4e-bdf0-4efe-8a03-eb91ab4e6066</DataSourceID>
-</RptDataSource>
