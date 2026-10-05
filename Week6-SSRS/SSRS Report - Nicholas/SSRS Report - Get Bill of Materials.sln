@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.37411.7
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F14B399A-7131-4C87-9E4B-1186C45EF12D}") = "SSRS Report - Get Bill of Materials", "SSRS Report - Nicholas\SSRS Report - Get Bill of Materials.rptproj", "{99FF1B15-77DF-EA1D-BAC0-3235424D37C4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Default = Debug|Default
+		DebugLocal|Default = DebugLocal|Default
+		Release|Default = Release|Default
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{99FF1B15-77DF-EA1D-BAC0-3235424D37C4}.Debug|Default.ActiveCfg = Debug
+		{99FF1B15-77DF-EA1D-BAC0-3235424D37C4}.Debug|Default.Build.0 = Debug
+		{99FF1B15-77DF-EA1D-BAC0-3235424D37C4}.Debug|Default.Deploy.0 = Debug
+		{99FF1B15-77DF-EA1D-BAC0-3235424D37C4}.DebugLocal|Default.ActiveCfg = DebugLocal
+		{99FF1B15-77DF-EA1D-BAC0-3235424D37C4}.DebugLocal|Default.Build.0 = DebugLocal
+		{99FF1B15-77DF-EA1D-BAC0-3235424D37C4}.Release|Default.ActiveCfg = Release
+		{99FF1B15-77DF-EA1D-BAC0-3235424D37C4}.Release|Default.Build.0 = Release
+		{99FF1B15-77DF-EA1D-BAC0-3235424D37C4}.Release|Default.Deploy.0 = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0F930888-627B-43E2-B1E5-46E833EB71D1}
+	EndGlobalSection
+EndGlobal
