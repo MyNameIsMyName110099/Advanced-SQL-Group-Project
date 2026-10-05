@@ -10,7 +10,7 @@
     </DataSource>
   </DataSources>
   <DataSets>
-    <DataSet Name="DataSet1">
+    <DataSet Name="Employee_Managers">
       <Query>
         <DataSourceName>AdventureWorks</DataSourceName>
         <QueryParameters>
@@ -746,7 +746,7 @@
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
-            <DataSetName>DataSet1</DataSetName>
+            <DataSetName>Employee_Managers</DataSetName>
             <Top>0.43in</Top>
             <Style />
           </Tablix>
