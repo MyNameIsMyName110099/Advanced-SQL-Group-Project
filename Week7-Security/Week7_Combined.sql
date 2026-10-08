@@ -1,3 +1,42 @@
+--Drop anything left from an earlier run so this script can be run again
+
+USE Restaurant;
+GO
+
+--Users first, so the roles below have no members left when they are dropped
+DROP USER IF EXISTS RestaurantUser;
+DROP USER IF EXISTS RestaurantAddDeleteDB_User;
+DROP USER IF EXISTS Dishes_table_user;
+DROP USER IF EXISTS Transactions_table_user;
+DROP USER IF EXISTS ServerEmployees_table_user;
+DROP USER IF EXISTS Chefs_table_user;
+DROP USER IF EXISTS Reservations_table_user;
+GO
+
+DROP ROLE IF EXISTS RestaurantDoAnything;
+DROP ROLE IF EXISTS RestaurantPower;
+GO
+
+--Logins and the server role live at the server level
+IF EXISTS (SELECT 1 FROM sys.server_principals WHERE name = 'RestaurantUser')
+DROP LOGIN RestaurantUser;
+IF EXISTS (SELECT 1 FROM sys.server_principals WHERE name = 'RestaurantAddDeleteDB_Login')
+DROP LOGIN RestaurantAddDeleteDB_Login;
+IF EXISTS (SELECT 1 FROM sys.server_principals WHERE name = 'Dishes_table_user')
+DROP LOGIN Dishes_table_user;
+IF EXISTS (SELECT 1 FROM sys.server_principals WHERE name = 'Transactions_table_user')
+DROP LOGIN Transactions_table_user;
+IF EXISTS (SELECT 1 FROM sys.server_principals WHERE name = 'ServerEmployees_table_user')
+DROP LOGIN ServerEmployees_table_user;
+IF EXISTS (SELECT 1 FROM sys.server_principals WHERE name = 'Chefs_table_user')
+DROP LOGIN Chefs_table_user;
+IF EXISTS (SELECT 1 FROM sys.server_principals WHERE name = 'Reservations_table_user')
+DROP LOGIN Reservations_table_user;
+IF EXISTS (SELECT 1 FROM sys.server_principals WHERE name = 'RestaurantAddDeleteDB' AND type = 'R')
+DROP SERVER ROLE RestaurantAddDeleteDB;
+GO
+
+
 --Week 7 Item 1
 
 /* Create users for Restaurant database
